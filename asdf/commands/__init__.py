@@ -9,6 +9,7 @@ from .extension import find_extensions
 from .info import info
 
 
+# need to add 'edit' here.
 __all__ = ['implode', 'explode', 'to_yaml', 'defragment', 'diff', 'list_tags',
     'find_extensions', 'info']
 
