@@ -53,25 +53,40 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Python 3.9
+          - name: Python 3.9 testing
             os: ubuntu-latest
             python-version: 3.9
             toxenv: py39
 
-          - name: Python 3.8
+          - name: Python 3.8 testing
             os: ubuntu-latest
             python-version: 3.8
             toxenv: py38
 
-          - name: Python 3.7
+          - name: Python 3.7 testing
             os: ubuntu-latest
             python-version: 3.7.9
             toxenv: py37
 
-          - name: Python 3.6
+          - name: Python 3.6 testing
             os: ubuntu-latest
             python-version: 3.6.10
             toxenv: py36
+
+          - name: Compatibility 
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: compatibility
+
+          - name: Bandit Security Checks
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: bandit
+
+          - name: Code coverage
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: coverage
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
