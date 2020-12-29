@@ -19,10 +19,35 @@ jobs:
             python-version: 3.9
             toxenv: py39
 
-          - name: Numpy 1.11
+          - name: Astropy Dev
             os: ubuntu-latest
-            python-version: 3.6.10
-            toxenv: py36-numpy11
+            python-version: 3.8
+            toxenv: py38-astropydev
+
+          - name: GWCS Dev
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-gwcsdev
+
+          - name: Numpy Dev
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-numpydev
+
+          - name: Pre-Release Dependencies
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: prerelease
+
+          - name: Test Against Installed Packaged
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: packaged
+
+          - name: Warnings Treated as Exceptions
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: warnings
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
