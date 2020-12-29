@@ -7,23 +7,6 @@ on:
     branches: [ master ]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8
-    - name: Lint with flake8
-      run: |
-        flake8 asdf --count --show-source --statistics
-
   tox:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -31,55 +14,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Python 3.9 testing
+          - name: Python 3.9 Testing
             os: ubuntu-latest
             python-version: 3.9
             toxenv: py39
 
-          - name: Python 3.8 testing
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: py38
-
-          - name: Python 3.7 testing
-            os: ubuntu-latest
-            python-version: 3.7.9
-            toxenv: py37
-
-          - name: Python 3.6 testing
+          - name: Numpy 1.11
             os: ubuntu-latest
             python-version: 3.6.10
-            toxenv: py36
-
-          - name: Compatibility 
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: compatibility
-
-          - name: Bandit Security Checks
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: bandit
-
-          - name: Code Coverage
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: coverage
-
-          - name: Code Style Checks
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: style
-
-          - name: Twine
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: twine
-
-          - name: Checkdocx
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: checkdocs
+            toxenv: py36-numpy11
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
