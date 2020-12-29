@@ -24,28 +24,6 @@ jobs:
       run: |
         flake8 asdf --count --show-source --statistics
 
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.8']
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Checkout submodules
-      run: git submodule update --init --recursive
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install .[tests]
-    - name: Test with pytest
-      run: |
-        pytest
-
   tox:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -83,10 +61,25 @@ jobs:
             python-version: 3.8
             toxenv: bandit
 
-          - name: Code coverage
+          - name: Code Coverage
             os: ubuntu-latest
             python-version: 3.8
             toxenv: coverage
+
+          - name: Code Style Checks
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: style
+
+          - name: Twine
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: twine
+
+          - name: Checkdocx
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: checkdocs
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
