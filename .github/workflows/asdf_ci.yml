@@ -19,6 +19,26 @@ jobs:
             python-version: 3.9
             toxenv: py39
 
+          - name: Python 3.8 Testing
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38
+
+          - name: Python 3.7 Testing
+            os: ubuntu-latest
+            python-version: 3.7.9
+            toxenv: py37
+
+          - name: Python 3.6 Testing
+            os: ubuntu-latest
+            python-version: 3.6.10
+            toxenv: py36
+
+          - name: Documentation Build
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: docbuild
+
           - name: Big-endian platform
             os: ubuntu-latest
             python-version: 3.9
@@ -30,6 +50,81 @@ jobs:
             os: windows-latest
             python-version: 3.9
             toxenv: py39
+
+          - name: Mac OS Latest
+            os: macos-latest
+            python-version: 3.9
+            toxenv: py39
+
+          - name: Compatibility 
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: compatibility
+
+          - name: Bandit Security Checks
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: bandit
+
+          - name: Code Coverage
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: coverage
+
+          - name: Code Style Checks
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: style
+
+          - name: Twine
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: twine
+
+          - name: Checkdocx
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: checkdocs
+
+          - name: Numpy 1.11
+            os: ubuntu-latest
+            python-version: 3.6.10
+            toxenv: py36-numpy11
+
+          - name: Numpy 1.12
+            os: ubuntu-latest
+            python-version: 3.6.10
+            toxenv: py36-numpy12
+
+          - name: Astropy Dev
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-astropydev
+
+          - name: GWCS Dev
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-gwcsdev
+
+          - name: Numpy Dev
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-numpydev
+
+          - name: Pre-Release Dependencies
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: prerelease
+
+          - name: Test Against Installed Packaged
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: packaged
+
+          - name: Warnings Treated as Exceptions
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: warnings
     steps:
       - name: Install System Packages
         if: ${{ contains(matrix.toxenv,'docbuild') }}
