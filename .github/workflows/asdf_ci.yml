@@ -19,13 +19,15 @@ jobs:
             python-version: 3.9
             toxenv: py39
 
-          - name: Documentation Build
+          - name: Big-endian platform
             os: ubuntu-latest
-            python-version: 3.8
-            toxenv: docbuild
+            python-version: 3.9
+            with: 
+              arch: s390x
+            toxenv: s390x
 
-          - name: Mac OS Latest
-            os: macos-latest
+          - name: Windows
+            os: windows-latest
             python-version: 3.9
             toxenv: py39
     steps:
