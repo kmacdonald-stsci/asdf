@@ -19,11 +19,20 @@ jobs:
             python-version: 3.9
             toxenv: py39
 
+          - name: Documentation Build
+            os: ubuntu-latest
+            python-version: 3.8
+            toxenv: docbuild
+
           - name: Mac OS Latest
             os: macos-latest
             python-version: 3.9
             toxenv: py39
     steps:
+      - name: Install System Packages
+        if: ${{ contains(matrix.toxenv,'docbuild') }}
+        run: |
+          sudo apt-get install graphviz texlive-latex-extra dvipng
       - name: Checkout code
         uses: actions/checkout@v2
         with:
