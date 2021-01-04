@@ -31,9 +31,6 @@ jobs:
         if: ${{ contains(matrix.toxenv,'docbuild') }}
         run: |
           sudo apt-get install graphviz texlive-latex-extra dvipng
-        if: ${{ contains(matrix.toxenv,'s390x') }}
-        with:
-          arch: s390x
       - name: Checkout code
         uses: actions/checkout@v2
         with:
