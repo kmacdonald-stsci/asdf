@@ -18,14 +18,6 @@ jobs:
             os: ubuntu-latest
             python-version: 3.9
             toxenv: py39
-
-          # Modified for testing only the big endian and standard job.
-          - name: Big-endian platform
-            os: ubuntu-latest
-            python-version: 3.9
-            with: 
-              arch: s390x
-            toxenv: s390x
     steps:
       - name: Install System Packages
         if: ${{ contains(matrix.toxenv,'docbuild') }}
@@ -46,3 +38,26 @@ jobs:
           pip install tox
       - name: Run tox
         run: tox -e ${{ matrix.toxenv }}
+
+  big_endian_build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9']
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        arch: s390x
+        python-version: ${{ matrix.python-version }}
+    - name: Checkout submodules
+      run: git submodule update --init --recursive
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+          pip install tox
+    - name: Run tox
+      run: |
+        tox -e s390x
