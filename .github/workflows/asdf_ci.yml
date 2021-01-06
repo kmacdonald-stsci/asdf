@@ -47,14 +47,14 @@ jobs:
         run: tox -e ${{ matrix.toxenv }}
 
   big_endian_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: ['3.9']
 
     steps:
     - uses: actions/checkout@v2.1.0
-    - uses: uraimo/run-on-arch-action@2.0.5
+    - uses: uraimo/run-on-arch-action@2.0.7
       with:
         arch: s390x
     - name: Set up Python ${{ matrix.python-version }}
