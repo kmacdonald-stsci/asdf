@@ -7,66 +7,53 @@ on:
     branches: [ master ]
 
 jobs:
-  tox:
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.os }}
+
+  tests_big_endian_architectures:
+
+    # This was modelled off astropy's multi-architecture testing.
+    # The following architectures are emulated and are therefore slow.
+    # These also serve as a test of using system libraries and using 
+    # pytest directly.
+
+    runs-on: ubuntu-18.04
+    name: Python 3.7 on ${{ matrix.arch }}
+
     strategy:
-      fail-fast: false
       matrix:
         include:
-          - name: Python 3.9 Testing
-            os: ubuntu-latest
-            python-version: 3.9
-            toxenv: py39
-
-          - name: Code Style Checks
-            os: ubuntu-latest
-            python-version: 3.8
-            toxenv: style
+          - arch: s390x
 
     steps:
-      - name: Install System Packages
-        if: ${{ contains(matrix.toxenv,'docbuild') }}
-        run: |
-          sudo apt-get install graphviz texlive-latex-extra dvipng
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          submodules: true
           fetch-depth: 0
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+          submodules: true
+      - uses: uraimo/run-on-arch-action@v2.0.5
+        name: Run tests
+        id: build
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install tox
-        run: |
-          # git submodule update --init --recursive
-          python -m pip install --upgrade pip
-          pip install tox
-      - name: Run tox
-        run: tox -e ${{ matrix.toxenv }}
+          arch: ${{ matrix.arch }}
+          distro: buster
 
-  big_endian_build:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        python-version: ['3.9']
+          shell: /bin/bash
 
-    steps:
-    - uses: actions/checkout@v2.1.0
-    - uses: uraimo/run-on-arch-action@2.0.7
-      with:
-        arch: s390x
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Checkout submodules
-      run: git submodule update --init --recursive
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-          pip install tox
-    - name: Run tox
-      run: |
-        tox -e s390x
+          install: |
+            echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
+            apt-get update -q -y
+            apt-get install -q -y git \
+                                  g++ \
+                                  pkg-config \
+                                  python3 \
+                                  python3-configobj \
+                                  python3-numpy \
+                                  python3-ply \
+                                  python3-venv \
+                                  cython3 \
+                                  wcslib-dev/buster-backports \
+                                  libcfitsio-dev \
+                                  liberfa1
+          run: |
+            python3 -m venv --system-site-packages tests
+            source tests/bin/activate
+            pip3 install -e .[test]
+            python3 -m pytest
