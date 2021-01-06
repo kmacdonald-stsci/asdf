@@ -18,6 +18,12 @@ jobs:
             os: ubuntu-latest
             python-version: 3.9
             toxenv: py39
+
+          - name: Code Style Checks
+            os: ubuntu-latest
+            python-version: 3.9
+            toxenv: style
+
     steps:
       - name: Install System Packages
         if: ${{ contains(matrix.toxenv,'docbuild') }}
@@ -26,6 +32,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
+          submodules: true
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -33,7 +40,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install tox
         run: |
-          git submodule update --init --recursive
+          # git submodule update --init --recursive
           python -m pip install --upgrade pip
           pip install tox
       - name: Run tox
@@ -46,11 +53,13 @@ jobs:
         python-version: ['3.9']
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.1.0
+    - uses: uraimo/run-on-arch-action@2.0.5
+      with:
+        arch: s390x
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        arch: s390x
         python-version: ${{ matrix.python-version }}
     - name: Checkout submodules
       run: git submodule update --init --recursive
