@@ -1,0 +1,62 @@
+name: ASDF Continuous Integration
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  tests_big_endian_architectures:
+
+    # This was modelled off astropy's multi-architecture testing.
+    # The following architectures are emulated and are therefore slow.
+    # These also serve as a test of using system libraries and using 
+    # pytest directly.
+
+    runs-on: ubuntu-18.04
+    name: Python 3.7 on ${{ matrix.arch }}
+
+    strategy:
+      matrix:
+        include:
+          - arch: s390x
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: uraimo/run-on-arch-action@v2.0.5
+        name: Run tests
+        id: build
+        with:
+          arch: ${{ matrix.arch }}
+          distro: buster
+
+          shell: /bin/bash
+
+          install: |
+            echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
+            apt-get update -q -y
+            apt-get install -q -y git \
+                                  g++ \
+                                  pkg-config \
+                                  python3 \
+                                  python3-configobj \
+                                  python3-numpy \
+                                  python3-ply \
+                                  python3-venv \
+                                  cython3 \
+                                  wcslib-dev/buster-backports \
+                                  libcfitsio-dev \
+                                  liberfa1
+          run: |
+            python3 -m venv --system-site-packages tests
+            source tests/bin/activate
+            ASTROPY_USE_SYSTEM_ALL=1 pip3 install -e .[tests]
+            python3 -m pytest
+            # python3 -m install tox
+            # tox -e s390x
+            # tox -e py37
